@@ -73,6 +73,8 @@ def train(
 
             # calculate the loss
             loss = loss_func(logits, label)
+
+            logger.add_scalar('train/loss', loss, global_step)
             
             # take gradient step
             optimizer.zero_grad()
