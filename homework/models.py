@@ -65,6 +65,7 @@ class MLPClassifier(nn.Module):
         h: int = 64,
         w: int = 64,
         num_classes: int = 6,
+        layer_size: int = 64
     ):
         """
         An MLP with a single hidden layer
@@ -79,9 +80,9 @@ class MLPClassifier(nn.Module):
         self.input_size = 3 * w * h
 
         layers  = [
-            nn.Linear(self.input_size, num_classes),
+            nn.Linear(self.input_size, layer_size),
             nn.ReLU(),
-            nn.Linear(num_classes, num_classes),
+            nn.Linear(layer_size, num_classes)
         ]
 
         self.model = nn.Sequential(*layers)

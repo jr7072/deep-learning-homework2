@@ -131,6 +131,7 @@ if __name__ == "__main__":
 
     # optional: additional model hyperparamters
     parser.add_argument("--batch_size", type=int, default=128)
+    parser.add_argument("--layer_size", type=int, default=6)
     # parser.add_argument("--num_layers", type=int, default=3)
 
     # pass all arguments to train
