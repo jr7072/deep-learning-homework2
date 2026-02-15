@@ -79,9 +79,9 @@ class MLPClassifier(nn.Module):
         self.input_size = 3 * w * h
 
         layers  = [
-            nn.Linear(self.input_size, 64),
+            nn.Linear(self.input_size, num_classes),
             nn.ReLU(),
-            nn.Linear(64, num_classes),
+            nn.Linear(num_classes, num_classes),
         ]
 
         self.model = nn.Sequential(*layers)
