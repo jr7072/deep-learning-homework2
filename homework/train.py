@@ -39,7 +39,8 @@ def train(
     model = load_model(model_name, **kwargs)
     model = model.to(device)
     model.train()
-
+    
+    print(f"loading data with batch size: {batch_size}")
     train_data = load_data("classification_data/train", shuffle=True, batch_size=batch_size, num_workers=2)
     val_data = load_data("classification_data/val", shuffle=False)
 
@@ -129,6 +130,7 @@ if __name__ == "__main__":
     parser.add_argument("--seed", type=int, default=2024)
 
     # optional: additional model hyperparamters
+    parser.add_argument("--batch_size", type=int, default=128)
     # parser.add_argument("--num_layers", type=int, default=3)
 
     # pass all arguments to train
