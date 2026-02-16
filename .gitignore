@@ -4,3 +4,4 @@ bundle.py
 classification_data/
 linear/
 mlp/
+mlp_deep/
