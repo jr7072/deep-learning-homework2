@@ -2,3 +2,5 @@ scratch_notebook.ipynb
 grader/
 bundle.py
 classification_data/
+linear/
+mlp/
