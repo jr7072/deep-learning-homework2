@@ -160,6 +160,8 @@ class MLPClassifierDeepResidual(nn.Module):
         h: int = 64,
         w: int = 64,
         num_classes: int = 6,
+        num_layers: int = 50,
+        layer_size: int = 128
     ):
         """
         Args:
@@ -173,7 +175,47 @@ class MLPClassifierDeepResidual(nn.Module):
         """
         super().__init__()
 
-        raise NotImplementedError("MLPClassifierDeepResidual.__init__() is not implemented")
+        class RESBlock(nn.Module):
+
+            def __init__(self, in_size: int, out_size: int):
+
+                super().__init__()
+
+                trans_layers = [
+                    nn.Linear(in_size, out_size, bias=False),
+                    nn.LayerNorm(out_size),
+                    nn.ReLU()
+                ]
+
+                self.trans = nn.Sequential(*trans_layers)
+                self.skip = nn.Identity()
+
+                if in_size != out_size:
+                    self.skip = nn.Linear(in_size, out_size)
+            
+            def forward(self, x: torch.Tensor) -> torch.Tensor:
+
+                trans_output = self.trans(x)
+                skip_output = self.skip(x)
+
+                return trans_output + skip_output
+        
+        self.input_size = 3 * h * w
+        model_layers = [
+            nn.Linear(self.input_size, layer_size)
+        ]
+
+        o = layer_size
+
+        for _ in range(num_layers):
+
+            model_layers.append(RESBlock(o, layer_size))
+            o = layer_size
+        
+        model_layers.append(nn.Linear(o, num_classes))
+
+        self.model = nn.Sequential(*model_layers)
+
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """
@@ -183,8 +225,9 @@ class MLPClassifierDeepResidual(nn.Module):
         Returns:
             tensor (b, num_classes) logits
         """
-        raise NotImplementedError("MLPClassifierDeepResidual.forward() is not implemented")
 
+        x_flat = x.view(-1, self.input_size)
+        return self.model(x_flat)
 
 model_factory = {
     "linear": LinearClassifier,
